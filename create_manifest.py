@@ -46,7 +46,7 @@ for directory in directories:
     print(directory)
     manifest[directory] = {}
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
-    manifest[directory]['resized_image_directory'] = os.path.join(directory, 'resized_images')
+    manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
     timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
     timestamps: List[int] = []
     for timestamp_file in timestamp_files:
