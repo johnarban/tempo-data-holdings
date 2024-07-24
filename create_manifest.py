@@ -72,3 +72,9 @@ for directory in directories:
 
 with open('manifest.json', 'w') as f:
     json.dump(manifest, f)
+
+
+# run the ./format_json.sh manifest.json to format the json file
+import subprocess
+subprocess.run(['./format_json.sh', 'manifest.json'])
+
