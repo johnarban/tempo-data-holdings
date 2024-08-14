@@ -47,17 +47,15 @@ for directory in directories:
     manifest[directory] = {}
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
     manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
-    # timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
-    # timestamps: List[int] = []
-    # for timestamp_file in timestamp_files:
-    #     with open(timestamp_file, 'r') as f:
-    #         ts = f.read()[1:-1].split(',')
-    #         timestamps.extend(int(t) for t in ts)
-    # manifest[directory]['timestamps'] = timestamps
+    timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
+    timestamps: List[int] = []
+    for timestamp_file in timestamp_files:
+        with open(timestamp_file, 'r') as f:
+            ts = f.read()[1:-1].split(',')
+            timestamps.extend(int(t) for t in ts)
+    manifest[directory]['timestamps'] = timestamps
     # manifest[directory]['image_filenames'] = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
     image_filenames = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
-    timestamps = [fname_to_time(f) for f in image_filenames]
-    manifest[directory]['timestamps'] = timestamps
     
     # Check if all timestamps have corresponding images
     test_ts = set([time_to_fname(t) for t in timestamps])
@@ -80,8 +78,8 @@ with open('manifest.json', 'w') as f:
 import subprocess
 subprocess.run(['./format_json.sh', 'manifest.json'])
 
-# now we need to git add everything and commit and push
-subprocess.run(['git', 'add', '.'])
-timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
-subprocess.run(['git', 'push'])
+# # now we need to git add everything and commit and push
+# subprocess.run(['git', 'add', '.'])
+# timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+# subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
+# subprocess.run(['git', 'push'])
