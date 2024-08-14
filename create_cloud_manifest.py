@@ -47,15 +47,17 @@ for directory in directories:
     manifest[directory] = {}
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
     manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
-    timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
-    timestamps: List[int] = []
-    for timestamp_file in timestamp_files:
-        with open(timestamp_file, 'r') as f:
-            ts = f.read()[1:-1].split(',')
-            timestamps.extend(int(t) for t in ts)
-    manifest[directory]['timestamps'] = timestamps
+    # timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
+    # timestamps: List[int] = []
+    # for timestamp_file in timestamp_files:
+    #     with open(timestamp_file, 'r') as f:
+    #         ts = f.read()[1:-1].split(',')
+    #         timestamps.extend(int(t) for t in ts)
+    # manifest[directory]['timestamps'] = timestamps
     # manifest[directory]['image_filenames'] = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
     image_filenames = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
+    timestamps = [fname_to_time(f) for f in image_filenames]
+    manifest[directory]['timestamps'] = timestamps
     
     # Check if all timestamps have corresponding images
     test_ts = set([time_to_fname(t) for t in timestamps])
