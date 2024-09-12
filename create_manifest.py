@@ -65,6 +65,7 @@ for directory in directories:
         print(f"Extra images for {test_ts - test_fn}")
     else:
         print("\t All images present")
+        print("\t Number of images: ", len(image_filenames))
     
     # sort the timestamps and filenames by timestamp
     manifest[directory]['timestamps'] = sorted(manifest[directory]['timestamps'])
