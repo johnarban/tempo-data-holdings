@@ -38,13 +38,20 @@ def fname_to_time(fname: str) -> int:
     dt = datetime.strptime(time_str, '%Y-%m-%dT%Hh%Mm')
     return int(dt.timestamp() * 1000)
 
+from typing import Mapping, TypedDict, Union, List, cast
 
+class DirectoryInfo(TypedDict):
+    image_directory: str
+    resized_image_directory: str
+    timestamps: List[int]
 
-manifest: Dict[str, Dict[str, Union[List, str]]] = {}
+DirectoryStructure = Mapping[str, DirectoryInfo]
+# {image_directory: str, resized_image_directory: str, timestamps: List[int]}
+manifest: DirectoryStructure = {}
 
 for directory in directories:
     print(directory)
-    manifest[directory] = {}
+    manifest[directory] = cast(DirectoryInfo, {})
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
     manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
     timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
@@ -61,8 +68,8 @@ for directory in directories:
     test_ts = set([time_to_fname(t) for t in timestamps])
     test_fn = set(image_filenames)
     if test_ts != test_fn:
-        print(f"Missing images for {test_ts - test_fn}")
-        print(f"Extra images for {test_ts - test_fn}")
+        print(f"Missing images for {directory}:\n {test_ts - test_fn}")
+        print(f"Extra images for {directory}:\n {test_ts - test_fn}")
     else:
         print("\t All images present")
         print("\t Number of images: ", len(image_filenames))
@@ -70,6 +77,16 @@ for directory in directories:
     # sort the timestamps and filenames by timestamp
     manifest[directory]['timestamps'] = sorted(manifest[directory]['timestamps'])
     # manifest[directory]['image_filenames'] = sorted(manifest[directory]['image_filenames'], key=fname_to_time)
+
+# check that the released and cloud timestampes are the same
+# released_ts = set(manifest['released']['timestamps'])
+# cloud_ts = set(manifest['clouds']['timestamps'])
+# if released_ts == cloud_ts:
+#     print("Released and cloud timestamps are the same")
+# else:
+#     print("Released and cloud timestamps are different")
+#     print("Released - Cloud: ", [time_to_fname(s) for s in released_ts - cloud_ts])
+#     print("Cloud - Released: ", [time_to_fname(s) for s in cloud_ts - released_ts])
 
 with open('manifest.json', 'w') as f:
     json.dump(manifest, f)
