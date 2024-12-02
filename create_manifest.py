@@ -75,7 +75,7 @@ for directory in directories:
         print("\t Number of images: ", len(image_filenames))
     
     # sort the timestamps and filenames by timestamp
-    manifest[directory]['timestamps'] = sorted(manifest[directory]['timestamps'])
+    manifest[directory]['timestamps'] = sorted(set(manifest[directory]['timestamps']))
     # manifest[directory]['image_filenames'] = sorted(manifest[directory]['image_filenames'], key=fname_to_time)
 
 # check that the released and cloud timestampes are the same
