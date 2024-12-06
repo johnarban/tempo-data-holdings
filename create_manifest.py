@@ -97,7 +97,7 @@ import subprocess
 subprocess.run(['./format_json.sh', 'manifest.json'])
 
 # # now we need to git add everything and commit and push
-# subprocess.run(['git', 'add', '.'])
-# timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-# subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
-# subprocess.run(['git', 'push'])
+subprocess.run(['git', 'add', '.'])
+timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
+subprocess.run(['git', 'push'])
