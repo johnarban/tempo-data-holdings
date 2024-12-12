@@ -36,7 +36,8 @@ main() {
     echo "Processing commits in chunks..."
     
     # Count total number of modified files
-    total_modified_files=$(git diff --name-only --diff-filter=M | wc -l)
+    # total_modified_files=$(git diff --name-only --diff-filter=M | wc -l)
+    total_modified_files=$(git ls-files --others --exclude-standard | wc -l)
     
     # Calculate total number of chunks
     total_chunks=$((total_modified_files / chunk_size + 1))
@@ -45,7 +46,8 @@ main() {
         echo "Processing chunk $i of $total_chunks"
         
         # Find modified files for this chunk
-        modified_files=$(git diff --name-only --diff-filter=M | head -n $((i * chunk_size)) | tail -n $chunk_size)
+        # modified_files=$(git diff --name-only --diff-filter=M | head -n $((i * chunk_size)) | tail -n $chunk_size)
+        modified_files=$(git ls-files --others --exclude-standard | head -n $((i * chunk_size)) | tail -n $chunk_size)
         
         # Call commit_push_chunk function with specific files
         commit_push_chunk $i $chunk_size "$modified_files"
