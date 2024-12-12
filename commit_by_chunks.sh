@@ -7,8 +7,18 @@ commit_push_chunk() {
     # Get current branch
     current_branch=$(git rev-parse --abbrev-ref HEAD)
     
+    # echo "Committing chunk $i of $total_chunks..."
+    # echo "$@"
     # Add modified files to stage using $@
-    git add "$@"
+    # git add "$@"
+    echo "$@" | tr ' ' '\n' | while read -r file; do
+    # check the file exists
+    if [ -f "$file" ]; then
+        git add "$file"
+        # echo "Adding $file to stage..."
+    fi
+    
+done
 
     
     # # Commit changes
