@@ -22,7 +22,7 @@ done
 
     
     # # Commit changes
-    git commit -m "Commit $((i / chunk_size + 1)) of $total_chunks"
+    git commit -m "Commit $i of $total_chunks"
     
     # # Push changes to remote
     git push origin "$current_branch"
