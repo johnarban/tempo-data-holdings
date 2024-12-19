@@ -63,16 +63,18 @@ for directory in directories:
     manifest[directory]['timestamps'] = timestamps
     # manifest[directory]['image_filenames'] = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
     image_filenames = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
-    
-    # Check if all timestamps have corresponding images
-    test_ts = set([time_to_fname(t) for t in timestamps])
-    test_fn = set(image_filenames)
-    if test_ts != test_fn:
-        print(f"Missing images for {directory}:\n {test_ts - test_fn}")
-        print(f"Extra images for {directory}:\n {test_ts - test_fn}")
+    if len(image_filenames) == 0:
+        print(f"No images found for {directory}")
     else:
-        print("\t All images present")
-        print("\t Number of images: ", len(image_filenames))
+        # Check if all timestamps have corresponding images
+        test_ts = set([time_to_fname(t) for t in timestamps])
+        test_fn = set(image_filenames)
+        if test_ts != test_fn:
+            print(f"Missing images for {directory}:\n {test_ts - test_fn}")
+            print(f"Extra images for {directory}:\n {test_ts - test_fn}")
+        else:
+            print("\t All images present")
+            print("\t Number of images: ", len(image_filenames))
     
     # sort the timestamps and filenames by timestamp
     manifest[directory]['timestamps'] = sorted(set(manifest[directory]['timestamps']))
@@ -97,7 +99,7 @@ import subprocess
 subprocess.run(['./format_json.sh', 'manifest.json'])
 
 # # now we need to git add everything and commit and push
-subprocess.run(['git', 'add', '.'])
-timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
-subprocess.run(['git', 'push'])
+# subprocess.run(['git', 'add', '.'])
+# timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+# subprocess.run(['git', 'commit', '-m', f'Updated cloud data {timestamp}'])
+# subprocess.run(['git', 'push'])
