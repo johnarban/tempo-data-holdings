@@ -23,7 +23,7 @@ import numpy as np
 from glob import glob
 from typing import Dict, List
 from typing import Dict, List, Union
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 def time_to_fname(time: int, suffix = '') -> str:
@@ -49,8 +49,18 @@ DirectoryStructure = Mapping[str, DirectoryInfo]
 # {image_directory: str, resized_image_directory: str, timestamps: List[int]}
 manifest: DirectoryStructure = {}
 
+# Load existing manifest
+manifest_path = 'manifest.json'
+if os.path.exists(manifest_path):
+    with open(manifest_path, 'r') as f:
+        old_manifest: DirectoryStructure = json.load(f)
+else:
+    old_manifest: DirectoryStructure = {}
+
+# Update manifest with new directories
 for directory in directories:
     print(directory)
+    # if directory not in manifest:
     manifest[directory] = cast(DirectoryInfo, {})
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
     manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
@@ -78,21 +88,21 @@ for directory in directories:
     
     # sort the timestamps and filenames by timestamp
     manifest[directory]['timestamps'] = sorted(set(manifest[directory]['timestamps']))
-    # manifest[directory]['image_filenames'] = sorted(manifest[directory]['image_filenames'], key=fname_to_time)
 
-# check that the released and cloud timestampes are the same
-# released_ts = set(manifest['released']['timestamps'])
-# cloud_ts = set(manifest['clouds']['timestamps'])
-# if released_ts == cloud_ts:
-#     print("Released and cloud timestamps are the same")
-# else:
-#     print("Released and cloud timestamps are different")
-#     print("Released - Cloud: ", [time_to_fname(s) for s in released_ts - cloud_ts])
-#     print("Cloud - Released: ", [time_to_fname(s) for s in cloud_ts - released_ts])
+# Print new dates added in Eastern Time
+eastern = timezone(timedelta(hours=-5))  # Eastern Time Zone
+for directory, info in manifest.items():
+    print(f"Directory: {directory}")
+    old_timestamps = set(old_manifest.get(directory, {}).get('timestamps', []))
+    new_timestamps = set(info['timestamps'])
+    added_timestamps = new_timestamps - old_timestamps
+    for timestamp in added_timestamps:
+        dt = datetime.fromtimestamp(timestamp / 1000, eastern)
+        print(f"New date added: {dt.strftime('%Y-%m-%d %H:%M:%S %Z')}")
 
-with open('manifest.json', 'w') as f:
-    json.dump(manifest, f)
-
+# Save updated manifest
+with open(manifest_path, 'w') as f:
+    json.dump(manifest, f, indent=4)
 
 # run the ./format_json.sh manifest.json to format the json file
 import subprocess
