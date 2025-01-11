@@ -24,6 +24,7 @@ from glob import glob
 from typing import Dict, List
 from typing import Dict, List, Union
 from datetime import datetime, timezone, timedelta
+from .consolidate_time_files import consolidate_timestamps
 
 
 def time_to_fname(time: int, suffix = '') -> str:
@@ -65,11 +66,7 @@ for directory in directories:
     manifest[directory]['image_directory'] = os.path.join(directory, 'images')
     manifest[directory]['resized_image_directory'] = os.path.join(directory,'images', 'resized_images')
     timestamp_files =  glob(os.path.join(directory, 'images', 'times*.npy'))
-    timestamps: List[int] = []
-    for timestamp_file in timestamp_files:
-        with open(timestamp_file, 'r') as f:
-            ts = f.read()[1:-1].split(',')
-            timestamps.extend(int(t) for t in ts)
+    timestamps = consolidate_timestamps(directory)
     manifest[directory]['timestamps'] = timestamps
     # manifest[directory]['image_filenames'] = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
     image_filenames = list(map(os.path.basename,glob(os.path.join(directory, 'images', 'tempo*.png'))))
