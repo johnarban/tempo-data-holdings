@@ -24,7 +24,7 @@ from glob import glob
 from typing import Dict, List
 from typing import Dict, List, Union
 from datetime import datetime, timezone, timedelta
-from .consolidate_time_files import consolidate_timestamps
+from consolidate_time_files import consolidate_timestamps
 
 
 def time_to_fname(time: int, suffix = '') -> str:
