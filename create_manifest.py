@@ -61,7 +61,7 @@ else:
 # use git to check if this is a sparse checkout
 import subprocess
 is_sparse = subprocess.run(['git', 'config', 'core.sparseCheckout'], capture_output=True)
-is_sparse = is_sparse.stdout == 'true'
+is_sparse = 'true' in is_sparse.stdout.decode().lower()
 
 # Update manifest with new directories
 for directory in directories:
@@ -111,7 +111,7 @@ with open(manifest_path, 'w') as f:
 import subprocess
 subprocess.run(['./format_json.sh', 'manifest.json'])
 
-# # now we need to git add everything and commit and push
+# now we need to git add everything and commit and push
 if is_sparse:
     subprocess.run(['git', 'add', '--sparse', '.'])
 else:
