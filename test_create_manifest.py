@@ -90,3 +90,6 @@ for directory, info in manifest.items():
         print(f"New date added: {dt.strftime('%Y-%m-%d %H:%M:%S %Z')}")
 
 
+# print the last time stamp
+last_time = manifest[directory]['timestamps'][-1]
+print(f"Last time stamp: {datetime.fromtimestamp(last_time / 1000, eastern)}")
