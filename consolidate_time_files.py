@@ -40,6 +40,9 @@ def fname_to_time(fname: str) -> int:
 
 from typing import Mapping, TypedDict, Union, List, cast
 
+def strip_newlines(s: str) -> str:
+    return s.replace('\n', '')
+
 class DirectoryInfo(TypedDict):
     image_directory: str
     resized_image_directory: str
@@ -75,9 +78,19 @@ def consolidate_timestamps(directory) -> List[int]:
     unique_timestamps = sorted(set(timestamps))
     # write this to a file
     with open(f'{directory}/images/timestamps.npy', 'w') as f:
-        f.write(str(unique_timestamps))
+        f.write('[\n')
+        for t in unique_timestamps[:-1]:
+            f.write(f'{t},\n') 
+        f.write(f'{unique_timestamps[-1]}\n')
+        f.write(']')
     print(f'Wrote {len(unique_timestamps)} timestamps to {directory}/images/timestamps.npy')
     return timestamps
 
-for directory in directories:
-    consolidate_timestamps(directory)
+# for directory in directories:
+#     consolidate_timestamps(directory)
+
+def read_timestamps_file(directory: str) -> List[int]:
+    with open(f'{directory}/images/timestamps.npy', 'r') as f:
+        ts = list(map(int, strip_newlines(f.read())[1:-1].split(',')))
+    return ts
+   
