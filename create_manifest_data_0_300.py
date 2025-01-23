@@ -112,10 +112,10 @@ import subprocess
 subprocess.run(['./format_json.sh', 'manifest_la_fire.json'])
 
 # now we need to git add everything and commit and push
-# if is_sparse:
-#     subprocess.run(['git', 'add', '--sparse', '.'])
-# else:
-#     subprocess.run(['git', 'add', '.'])
-# timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-# subprocess.run(['git', 'commit', '-m', f'Updated data {timestamp}'])
-# subprocess.run(['git', 'push'])
+if is_sparse:
+    subprocess.run(['git', 'add', '--sparse', '.'])
+else:
+    subprocess.run(['git', 'add', '.'])
+timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+subprocess.run(['git', 'commit', '-m', f'Updated LA data {timestamp}'])
+subprocess.run(['git', 'push'])
